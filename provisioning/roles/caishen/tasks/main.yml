@@ -1,0 +1,12 @@
+---
+- name: setup hex and rebar
+  command: mix do local.hex --force, local.rebar --force
+  args:
+    chdir: "{{ansible_env['HOME']}}"
+    creates: "{{ansible_env['HOME']}}/.mix/rebar"
+
+- name: perform initial setup
+  command: mix do deps.get, compile, ecto.create, ecto.migrate
+  args:
+    chdir: /vagrant
+    creates: /vagrant/_build

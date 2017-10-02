@@ -1,0 +1,7 @@
+---
+- name: restart postgres container
+  become: yes
+  docker_container:
+    name: postgres
+    state: started
+    restart: yes

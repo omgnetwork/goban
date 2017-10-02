@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+cat <<-EOF > /var/lib/postgresql/data/pg_hba.conf
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+local   all             all                                     trust
+host    all             all             172.17.0.0/16           trust
+host    all             all             127.0.0.1/32            trust
+host    all             all             ::1/128                 trust
+host    all             all             all                     md5
+EOF

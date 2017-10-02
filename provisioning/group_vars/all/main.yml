@@ -1,0 +1,4 @@
+---
+postgres_user: "{{ansible_user}}"
+postgres_db: "{{postgres_user}}"
+postgres_password: "{{postgres_user}}"

@@ -1,0 +1,15 @@
+---
+- hosts: all
+  roles:
+    - commons
+
+- hosts:
+    - caishen
+    - kubera
+  roles:
+    - elixir
+    - postgres
+
+- hosts: caishen
+  roles:
+    - caishen

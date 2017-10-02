@@ -1,0 +1,37 @@
+---
+- name: ensure postgres directory
+  become: yes
+  file:
+    path: "{{item}}"
+    state: directory
+    recurse: yes
+  with_items:
+    - /srv/postgres/data
+    - /srv/postgres/initdb
+
+- name: copy postgres initdb
+  become: yes
+  template:
+    src: srv/postgres/initdb/{{item}}.j2
+    dest: /srv/postgres/initdb/{{item}}
+    mode: 0755
+  with_items:
+    - 01_init_hba.sh
+  notify:
+    - restart postgres container
+
+- name: enable postgres container
+  become: yes
+  docker_container:
+    name: postgres
+    image: postgres:9
+    restart_policy: always
+    volumes:
+      - /srv/postgres/data:/var/lib/postgresql/data
+      - /srv/postgres/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+    env:
+      POSTGRES_USER: "{{postgres_user}}"
+      POSTGRES_PASSWORD: "{{postgres_password}}"
+      POSTGRES_DB: "{{postgres_db}}"

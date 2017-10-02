@@ -1,0 +1,25 @@
+---
+- name: install docker gpg key
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: install docker repository
+  become: yes
+  apt_repository:
+    repo: deb https://download.docker.com/linux/debian/ jessie stable
+    state: present
+
+- name: install docker
+  become: yes
+  apt: name=docker-ce state=latest
+
+- name: add current user to docker
+  become: yes
+  user:
+    name: "{{ansible_user}}"
+    groups: docker
+    append: yes
+  notify:
+    - restart docker

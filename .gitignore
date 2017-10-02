@@ -1,0 +1,20 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+*~
+*.swp
+.vagrant
+.idea
+.envrc
+.dir-locals.el
+.gems
+*.iml
+
+# Workspace
+/caishen/
+/kubera/
+
+# Ansible
+playbook.retry

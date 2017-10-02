@@ -1,0 +1,17 @@
+---
+- name: install python2
+  become: yes
+  apt: name=python2.7 state=latest
+
+- name: install pip
+  become: yes
+  shell: curl https://bootstrap.pypa.io/get-pip.py | python2.7
+  args:
+    creates: /usr/local/bin/pip2.7
+    warn: no
+
+- name: install python2 modules for ansible
+  become: yes
+  pip: name={{item}} state=latest
+  with_items:
+    - docker-py

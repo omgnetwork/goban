@@ -1,0 +1,324 @@
+#!/usr/bin/env bash
+
+BASE_DIR=$(cd "$(dirname "$0")/../" || exit; pwd -P)
+CONFIG_DIR="${BASE_DIR}/.git/goban"
+CONFIG_FILE="${CONFIG_DIR}/config"
+VAGRANT_FILE="${BASE_DIR}/Vagrantfile"
+
+
+#
+# Utilities
+#
+
+echo_clear() {
+    echo -ne "\033[1A\r\033[K"
+}
+
+echo_fatal() {
+    echo -e "\033[0;31m$1\033[0;0m"
+}
+
+echo_head() {
+    echo -e "\033[1;37m$1\033[0;0m"
+}
+
+echo_newline() {
+    echo -e
+}
+
+msg() {
+    echo -e "  $1"
+}
+
+msg_detail() {
+    msg "  $1"
+}
+
+msg_error() {
+    msg "\033[0;31m!\033[0;0m $1"
+}
+
+msg_notice() {
+    msg "\033[1;37m*\033[0;0m $1"
+}
+
+msg_ok() {
+    msg "\033[0;32m✓\033[0;0m $1"
+}
+
+msg_wait() {
+    msg "* \033[0;33m$1\033[0;0m"
+}
+
+
+#
+# Sanity check
+#
+
+if [ ! -f "${VAGRANT_FILE}" ]; then
+    echo_fatal "The base directory does not appeared to be valid."
+    echo -e "Current value of \033[1;32mBASE_DIR\033[0;0m is \033[1;36m$BASE_DIR\033[0;0m"
+    exit 1
+fi
+
+if [ ! -d "${CONFIG_DIR}" ]; then
+    mkdir -p "${CONFIG_DIR}"
+fi
+
+cd "$BASE_DIR" || exit
+
+
+#
+# Configuration
+#
+
+init_config() {
+    VAGRANT_PROVIDER=virtualbox
+}
+
+# shellcheck source=.git/goban/config disable=SC1091
+read_config() {
+    if [ -f "${CONFIG_FILE}" ]; then
+        . "${CONFIG_FILE}"
+    fi
+}
+
+print_usage() {
+    echo -e "Usage: $0 [-${OPTS}]"
+    echo -e
+    echo -e "	 -h	    Print this help."
+    echo -e "	 -v	    Initialize environment using VMware Fusion."
+    echo -e "	 -r	    Reset the configuration."
+    echo -e
+    echo -e "Default projects:"
+    echo -e
+    echo -e "	 These projects are setup by default when no arguments are given to bootstrap."
+    echo -e "	 They are the minimal set of projects required to get the test mode running."
+    echo -e
+    echo -e "	 \033[1;1mcaishen\033[0;0m    The internal ledger database."
+    echo -e "	 \033[1;1mkubera\033[0;0m     The entrypoint to the wallet API."
+    echo -e
+}
+
+enable_vmware() {
+    VAGRANT_PROVIDER=vmware
+}
+
+reset_config() {
+    init_config
+    rm "${CONFIG_FILE}"
+}
+
+OPTS=hvr
+init_config
+read_config
+
+ARGS=$(getopt $OPTS "$*" 2>/dev/null)
+
+# shellcheck disable=SC2181
+if [ $? != 0 ]; then
+    print_usage
+    exit 1
+fi
+
+# shellcheck disable=SC2086
+set -- $ARGS
+
+while true; do
+    case "$1" in
+        -h ) print_usage; exit 2;;
+        -v ) enable_vmware; shift;;
+        -r ) reset_config; shift;;
+        *  ) break;;
+    esac
+done
+
+if [ "${VAGRANT_PROVIDER}" = "vmware" ] && [[ "${OSTYPE}" != darwin* ]]; then
+    echo_fatal "VMware is only supported on Darwin."
+    echo -e "Please reset the configuration and re-run bootstrap script without -v."
+    exit 1
+fi
+
+cat <<-EOF > "${CONFIG_FILE}"
+VAGRANT_PROVIDER=${VAGRANT_PROVIDER}
+EOF
+
+
+#
+# Commons
+#
+
+common_config() {
+    echo_head "Bootstrapping with the following configurations:"
+    msg "VAGRANT_PROVIDER: \033[1;37m${VAGRANT_PROVIDER}\033[0;0m"
+    echo_newline
+}
+
+clone_repository() {
+    if [ ! -d "$1" ]; then
+        msg_wait "Cloning $1..."
+        if ! git clone "$2" "$1" 2>&1 |sed "s/^/    /"; then
+            msg_error "An error occurred while cloning $1"
+            exit 1
+        fi
+    else
+        msg_ok "$1 is already cloned."
+    fi
+}
+
+common_clone() {
+    echo_head "Cloning repositories:"
+    clone_repository caishen ssh://git@phabricator.omisego.io/source/caishen.git
+    clone_repository kubera ssh://git@phabricator.omisego.io/source/kubera.git
+    echo_newline
+}
+
+common_vagrant() {
+    echo_head "Initializing Vagrant boxes:"
+
+    if [ ! -d "${BASE_DIR}/.vagrant" ]; then
+        echo -e "This step may take a while to complete for the first time."
+        echo -e "Go out for a walk or read \033[1;37mhttps://www.vagrantup.com/docs/\033[0;0m while waiting."
+    fi
+
+    if ! vagrant up --provider "${VAGRANT_PROVIDER}" 2>&1 |sed "s/^/  /"; then
+        msg_error "An error occurred while initializing Vagrant boxes."
+        exit 1
+    fi
+
+    echo_newline
+}
+
+common_done() {
+    echo_head "Done bootstrapping environment."
+    msg "All virtual machines should be running."
+    msg "Run \033[1;36mvagrant ssh caishen\033[0;0m to access Caishen box."
+    msg "Run \033[1;36mvagrant ssh kubera\033[0;0m to access Kubera box."
+    msg "Run \033[1;36mvagrant halt\033[0;0m to shutdown everything."
+    msg "Run \033[1;36mvagrant up\033[0;0m for subsequent boot."
+    msg "Run \033[1;36mvagrant provision\033[0;0m to re-provision the virtual machine."
+    msg "Run \033[1;36mvagrant destroy\033[0;0m to destroy the virtual machine."
+    msg "Refer to the documentation of each project for further instructions."
+}
+
+#
+# Darwin
+#
+
+darwin_setenv() {
+    export PATH=/usr/local/bin:$PATH
+}
+
+darwin_xcode_setup() {
+    msg_wait "Determining CLI tools status. You may need to enter root password."
+    if xcode-select --install 2>/dev/null; then
+        msg_notice "Prompting to accept CLI tools license:"
+        if ! sudo xcodebuild -license accept; then
+            msg_error "An error occured while trying to accept CLI tools license."
+            exit 1
+        fi
+    else
+        echo_clear
+        msg_ok "CLI tools is already installed."
+    fi
+}
+
+darwin_brew_setup() {
+    if hash brew 2>/dev/null; then
+        msg_ok "Homebrew is already installed."
+    else
+        msg_wait "Installing Homebrew..."
+        if ! /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 2>&1 |sed "s/^/    /"; then
+            msg_error "An error occured while installing Homebrew."
+            exit 1
+        fi
+    fi
+}
+
+darwin_ansible_setup() {
+    if hash ansible-playbook 2>/dev/null; then
+        msg_ok "Ansible is already installed"
+    else
+        msg_wait "Installing Ansible..."
+        if ! brew install ansible 2>&1 |sed "s/^/    /"; then
+            msg_error "An error occured while installing Ansible."
+            exit 1
+        fi
+    fi
+}
+
+darwin_vagrant_setup() {
+    if hash vagrant 2>/dev/null; then
+        msg_ok "Vagrant is already installed."
+    else
+        msg_wait "Vagrant is not installed. Installing..."
+        if ! brew cask install vagrant 2>&1 |sed "s/^/    /"; then
+            msg_error "An error occured while installing Vagrant."
+            exit 1
+        fi
+    fi
+}
+
+darwin_virtualbox_setup() {
+    if [ -d "/Applications/VirtualBox.app" ]; then
+        msg_ok "VirtualBox is already installed."
+    else
+        msg_wait "VirtualBox is not installed. Installing..."
+        if ! brew cask install virtualbox 2>&1 |sed "s/^/    /"; then
+            msg_error "An error occured while installing VirtualBox."
+            exit 1
+        fi
+    fi
+}
+
+darwin_vmware_setup() {
+    if [ -d "/Applications/VMware Fusion.app" ]; then
+        msg_ok "VMware Fusion is already installed."
+    else
+        msg_error "VMware Fusion and VMware Vagrant Plugin must be installed manually."
+        msg_detail "For more information, see \033[1;37mhttps://www.vagrantup.com/vmware/\033[0;0m"
+        exit 1
+    fi
+}
+
+darwin_preflight() {
+    echo_head "Performing preflight checks:"
+    darwin_xcode_setup
+    darwin_brew_setup
+    darwin_ansible_setup
+    darwin_vagrant_setup
+
+    case $VAGRANT_PROVIDER in
+        vmware) darwin_vmware_setup;;
+        virtualbox) darwin_virtualbox_setup;;
+        *)
+            msg_error "Unsupported provisioner: ${VAGRANT_PROVIDER}"
+            exit 1
+            ;;
+    esac
+
+    echo_newline
+}
+
+bootstrap_darwin() {
+    common_config
+    darwin_setenv
+    darwin_preflight
+    common_clone
+    common_vagrant
+    common_done
+}
+
+
+#
+# Main
+#
+
+case $OSTYPE in
+    darwin*) bootstrap_darwin;;
+    *)
+        msg_error "Could not start bootstrap script."
+        msg_error "Unsupported platform: $OSTYPE."
+        exit 1
+        ;;
+esac

@@ -1,0 +1,16 @@
+---
+- name: update apt cache
+  become: yes
+  apt:
+    update_cache: yes
+    cache_valid_time: 604800
+
+- name: install common dependencies
+  become: yes
+  apt: name={{item}} state=latest
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - git
+    - python-software-properties
