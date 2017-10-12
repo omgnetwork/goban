@@ -13,3 +13,7 @@
 - hosts: caishen
   roles:
     - caishen
+
+- hosts: kubera
+  roles:
+    - kubera
