@@ -100,8 +100,8 @@ print_usage() {
     echo -e
 }
 
-enable_vmware() {
-    VAGRANT_PROVIDER=vmware
+enable_vmware_fusion() {
+    VAGRANT_PROVIDER=vmware_fusion
 }
 
 reset_config() {
@@ -127,13 +127,13 @@ set -- $ARGS
 while true; do
     case "$1" in
         -h ) print_usage; exit 2;;
-        -v ) enable_vmware; shift;;
+        -v ) enable_vmware_fusion; shift;;
         -r ) reset_config; shift;;
         *  ) break;;
     esac
 done
 
-if [ "${VAGRANT_PROVIDER}" = "vmware" ] && [[ "${OSTYPE}" != darwin* ]]; then
+if [ "${VAGRANT_PROVIDER}" = "vmware_fusion" ] && [[ "${OSTYPE}" != darwin* ]]; then
     echo_fatal "VMware is only supported on Darwin."
     echo -e "Please reset the configuration and re-run bootstrap script without -v."
     exit 1
@@ -271,7 +271,7 @@ darwin_virtualbox_setup() {
     fi
 }
 
-darwin_vmware_setup() {
+darwin_vmware_fusion_setup() {
     if [ -d "/Applications/VMware Fusion.app" ]; then
         msg_ok "VMware Fusion is already installed."
     else
@@ -289,7 +289,7 @@ darwin_preflight() {
     darwin_vagrant_setup
 
     case $VAGRANT_PROVIDER in
-        vmware) darwin_vmware_setup;;
+        vmware_fusion) darwin_vmware_fusion_setup;;
         virtualbox) darwin_virtualbox_setup;;
         *)
             msg_error "Unsupported provisioner: ${VAGRANT_PROVIDER}"

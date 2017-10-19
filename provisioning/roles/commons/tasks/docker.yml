@@ -8,7 +8,7 @@
 - name: install docker repository
   become: yes
   apt_repository:
-    repo: deb https://download.docker.com/linux/debian/ jessie stable
+    repo: deb https://download.docker.com/linux/debian/ stretch stable
     state: present
 
 - name: install docker

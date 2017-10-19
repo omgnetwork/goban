@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "bento/debian-8"
+  config.vm.box = "bento/debian-9"
 
   config.vm.define "caishen" do |node|
     node.vm.hostname = "caishen"

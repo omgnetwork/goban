@@ -1,16 +1,16 @@
 ---
-- name: install python2
+- name: install python3
   become: yes
-  apt: name=python2.7 state=latest
+  apt: name=python3 state=latest
 
 - name: install pip
   become: yes
-  shell: curl https://bootstrap.pypa.io/get-pip.py | python2.7
+  shell: curl https://bootstrap.pypa.io/get-pip.py | python3
   args:
-    creates: /usr/local/bin/pip2.7
+    creates: /usr/local/bin/pip3
     warn: no
 
-- name: install python2 modules for ansible
+- name: install python3 modules for ansible
   become: yes
   pip: name={{item}} state=latest
   with_items:
