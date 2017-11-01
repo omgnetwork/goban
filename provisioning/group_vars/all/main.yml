@@ -4,3 +4,7 @@ ansible_python_interpreter: /usr/bin/python3
 postgres_user: "{{ansible_user}}"
 postgres_db: "{{postgres_user}}"
 postgres_password: "{{postgres_user}}"
+
+rabbitmq_user: "guest"
+rabbitmq_password: "guest"
+rabbitmq_erlang_cookie: "rabbitmq"

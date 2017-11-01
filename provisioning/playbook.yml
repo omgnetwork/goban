@@ -7,7 +7,7 @@
     - caishen
     - kubera
   roles:
-    - elixir
+    - runtime
     - postgres
 
 - hosts: caishen
@@ -17,3 +17,7 @@
 - hosts: kubera
   roles:
     - kubera
+
+- hosts: pokedex
+  roles:
+    - rabbitmq

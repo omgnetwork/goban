@@ -6,7 +6,10 @@
     creates: "{{ansible_env['HOME']}}/.mix/rebar"
 
 - name: perform initial setup
-  command: mix do deps.get, compile, ecto.create, ecto.migrate
+  shell: |
+    mix deps.get && \
+    MIX_ENV=dev mix do compile, ecto.create, ecto.migrate && \
+    MIX_ENV=test mix do compile, ecto.create, ecto.migrate
   args:
     chdir: /vagrant
     creates: /vagrant/_build
