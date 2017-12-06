@@ -1,4 +1,5 @@
 ---
+- import_tasks: locale.yml
 - import_tasks: package.yml
 - import_tasks: python.yml
 - import_tasks: chrony.yml

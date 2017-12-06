@@ -1,0 +1,4 @@
+---
+- name: Set locale to UTF-8
+  become: yes
+  shell: update-locale LC_ALL=en_US.UTF-8
