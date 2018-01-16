@@ -168,8 +168,8 @@ clone_repository() {
 
 common_clone() {
     echo_head "Cloning repositories:"
-    clone_repository caishen ssh://git@phabricator.omisego.io/source/caishen.git
-    clone_repository kubera ssh://git@phabricator.omisego.io/source/kubera.git
+    clone_repository caishen ssh://git@github.com/omisego/caishen.git
+    clone_repository kubera ssh://git@github.com/omisego/kubera.git
     echo_newline
 }
 
