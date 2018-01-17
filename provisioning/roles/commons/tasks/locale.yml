@@ -1,4 +1,9 @@
 ---
 - name: Set locale to UTF-8
   become: yes
-  shell: update-locale LC_ALL=en_US.UTF-8
+  copy:
+    src: etc/default/locale
+    dest: /etc/default/locale
+    mode: 0644
+  notify:
+    - update locale

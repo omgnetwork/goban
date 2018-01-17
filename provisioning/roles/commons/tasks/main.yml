@@ -4,3 +4,4 @@
 - import_tasks: python.yml
 - import_tasks: chrony.yml
 - import_tasks: docker.yml
+- import_tasks: ssh.yml
