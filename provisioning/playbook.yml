@@ -3,21 +3,8 @@
   roles:
     - commons
 
-- hosts:
-    - caishen
-    - kubera
+- hosts: ewallet
   roles:
     - runtime
     - postgres
-
-- hosts: caishen
-  roles:
-    - caishen
-
-- hosts: kubera
-  roles:
-    - kubera
-
-- hosts: pokedex
-  roles:
-    - rabbitmq
+    - ewallet

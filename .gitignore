@@ -13,8 +13,7 @@ Thumbs.db
 *.iml
 
 # Workspace
-/caishen/
-/kubera/
+/ewallet/
 
 # Ansible
 playbook.retry
