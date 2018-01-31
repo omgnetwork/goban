@@ -1,3 +1,1 @@
 export LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
-export POKEDEX_ADDRESS="{{hostvars['pokedex'].private_ipv4}}"
-export MQ_URL="amqp://{{rabbitmq_user}}:{{rabbitmq_password}}@${POKEDEX_ADDRESS}"

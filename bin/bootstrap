@@ -95,8 +95,7 @@ print_usage() {
     echo -e "	 These projects are setup by default when no arguments are given to bootstrap."
     echo -e "	 They are the minimal set of projects required to get the test mode running."
     echo -e
-    echo -e "	 \033[1;1mcaishen\033[0;0m    The internal ledger database."
-    echo -e "	 \033[1;1mkubera\033[0;0m     The entrypoint to the wallet API."
+    echo -e "	 \033[1;1mewallet\033[0;0m    The eWallet server."
     echo -e
 }
 
@@ -168,8 +167,7 @@ clone_repository() {
 
 common_clone() {
     echo_head "Cloning repositories:"
-    clone_repository caishen ssh://git@github.com/omisego/caishen.git
-    clone_repository kubera ssh://git@github.com/omisego/kubera.git
+    clone_repository ewallet ssh://git@github.com/omisego/ewallet.git
     echo_newline
 }
 
@@ -192,9 +190,7 @@ common_vagrant() {
 common_done() {
     echo_head "Done bootstrapping environment."
     msg "All virtual machines should be running."
-    msg "Run \033[1;36mvagrant ssh caishen\033[0;0m to access Caishen box."
-    msg "Run \033[1;36mvagrant ssh kubera\033[0;0m to access Kubera box."
-    msg "Run \033[1;36mvagrant ssh pokedex\033[0;0m to access a shared service box."
+    msg "Run \033[1;36mvagrant ssh ewallet\033[0;0m to access ewallet box."
     msg "Run \033[1;36mvagrant halt\033[0;0m to shutdown everything."
     msg "Run \033[1;36mvagrant up\033[0;0m for subsequent boot."
     msg "Run \033[1;36mvagrant provision\033[0;0m to re-provision the virtual machine."
