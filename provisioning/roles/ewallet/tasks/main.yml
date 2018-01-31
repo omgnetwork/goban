@@ -1,15 +1,6 @@
 ---
-- name: setup hex and rebar
-  command: mix do local.hex --force, local.rebar --force
-  args:
-    chdir: "{{ansible_env['HOME']}}"
-    creates: "{{ansible_env['HOME']}}/.mix/rebar"
-
-- name: perform initial setup
-  shell: |
-    mix deps.get && \
-    MIX_ENV=dev mix do compile, ecto.create, ecto.migrate && \
-    MIX_ENV=test mix do compile, ecto.create, ecto.migrate
-  args:
-    chdir: /vagrant
-    creates: /vagrant/_build
+- import_tasks: env.yml
+- import_tasks: packages/erlang.yml
+- import_tasks: packages/imagemagick.yml
+- import_tasks: packages/libsodium.yml
+- import_tasks: ewallet.yml
