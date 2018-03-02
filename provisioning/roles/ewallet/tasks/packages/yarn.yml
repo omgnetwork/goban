@@ -1,0 +1,18 @@
+---
+- name: install yarn gpg key
+  become: yes
+  apt_key:
+    url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    state: present
+
+- name: install yarn repository
+  become: yes
+  apt_repository:
+    repo: deb https://dl.yarnpkg.com/debian/ stable main
+    state: present
+
+- name: install yarn
+  become: yes
+  apt: name={{item}} state=present
+  with_items:
+    - yarn=1.5.1-1

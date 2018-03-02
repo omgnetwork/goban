@@ -1,0 +1,12 @@
+---
+- name: install nodejs gpg key
+  become: yes
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
+- name: install nodejs
+  become: yes
+  apt:
+    deb: https://deb.nodesource.com/node_8.x/pool/main/n/nodejs/nodejs_8.9.4-1nodesource1_amd64.deb
+    state: present

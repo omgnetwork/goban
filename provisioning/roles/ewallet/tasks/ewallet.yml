@@ -5,6 +5,11 @@
     chdir: "{{ansible_env['HOME']}}"
     creates: "{{ansible_env['HOME']}}/.mix/rebar"
 
+- name: install yarn dependencies
+  command: yarn install
+  args:
+    chdir: /vagrant/apps/admin_panel/assets
+
 - name: perform initial setup
   shell: |
     mix deps.get && \

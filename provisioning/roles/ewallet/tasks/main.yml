@@ -3,4 +3,6 @@
 - import_tasks: packages/erlang.yml
 - import_tasks: packages/imagemagick.yml
 - import_tasks: packages/libsodium.yml
+- import_tasks: packages/node.yml
+- import_tasks: packages/yarn.yml
 - import_tasks: ewallet.yml
