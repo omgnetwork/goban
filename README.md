@@ -50,3 +50,11 @@ On macOS, the following packages are installed as part of bootstrap:
 ## Usage
 
 Refer to [Getting Started with Vagrant](https://www.vagrantup.com/intro/getting-started/index.html) for more information.
+
+# Contributing
+
+See [how you can help](.github/CONTRIBUTING.md).
+
+# License
+
+Goban is released under the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
