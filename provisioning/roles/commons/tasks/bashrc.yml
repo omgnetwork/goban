@@ -1,12 +1,7 @@
 ---
-- name: Find `cd /vagrant` line in .bashrc
-  shell: grep "^cd /vagrant" /home/vagrant/.bashrc
-  register: cd_vagrant
-  failed_when: cd_vagrant.rc == 2
-  changed_when: false # Suppresses that grep output always show as changed
-
-- name: add `cd /vagrant` to .bashrc if it doesn't exist yet
-  lineinfile:
+- name: Set our customized .bashrc
+  become: yes
+  copy:
+    src: home/vagrant/.bashrc
     dest: /home/vagrant/.bashrc
-    line: cd /vagrant
-  when: cd_vagrant.stdout == ""
+    mode: 0644
