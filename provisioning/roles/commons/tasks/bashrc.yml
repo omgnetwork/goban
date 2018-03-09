@@ -1,0 +1,7 @@
+---
+- name: copy default bashrc
+  become: yes
+  copy:
+    src: home/vagrant/.bashrc
+    dest: /home/vagrant/.bashrc
+    mode: 0644
