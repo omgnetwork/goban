@@ -1,5 +1,5 @@
 ---
-- name: Set our customized .bashrc
+- name: copy default bashrc
   become: yes
   copy:
     src: home/vagrant/.bashrc
