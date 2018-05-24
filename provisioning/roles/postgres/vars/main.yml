@@ -1,0 +1,2 @@
+---
+ewallet_postgres_user: "{{ansible_user}}"

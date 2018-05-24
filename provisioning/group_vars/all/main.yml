@@ -1,7 +1,7 @@
 ---
 ansible_python_interpreter: /usr/bin/python3
 
-postgres_user: "{{ansible_user}}"
+postgres_user: "postgres"
 postgres_db: "{{postgres_user}}"
 postgres_password: "{{postgres_user}}"
 
