@@ -10,7 +10,7 @@
   args:
     chdir: /vagrant/apps/admin_panel/assets
   register: yarn_result
-  changed_when: "'Already up-to-date' not in yarn_result.stdout"
+  changed_when: yarn_result['stdout'].find('Already up-to-date') == -1
 
 - name: perform initial setup
   shell: |

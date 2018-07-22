@@ -1,6 +1,24 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+#
+# Utilities
+#
+
+def env_bool(env_name)
+  (ENV[env_name] =~ /^1|t|y/) != nil
+end
+
+#
+# Configurations
+#
+
+ENABLE_VNC_PASSWORD = env_bool("ENABLE_VNC_PASSWORD")
+
+#
+# Vagrant boxes
+#
+
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/debian-9"
   config.ssh.forward_agent = true
@@ -18,6 +36,12 @@ Vagrant.configure("2") do |config|
       ansible.host_vars = {
         "ewallet" => {"private_ipv4" => "10.5.10.10"},
       }
+    end
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    if ENABLE_VNC_PASSWORD
+      vb.customize ["modifyvm", :id, "--vrdeproperty", "VNCPassword=orion"]
     end
   end
 end
