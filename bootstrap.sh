@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PLATFORM=$(uname)
-BASE_DIR=$(cd "$(dirname "$0")/../" || exit; pwd -P)
+BASE_DIR=$(cd "$(dirname "$0")/" || exit; pwd -P)
 CONFIG_DIR="$BASE_DIR/.git/goban"
 CONFIG_FILE="$CONFIG_DIR/config"
 VAGRANT_FILE="$BASE_DIR/Vagrantfile"
