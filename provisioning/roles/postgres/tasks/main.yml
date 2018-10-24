@@ -12,7 +12,7 @@
 - name: copy postgres initdb
   become: yes
   template:
-    src: srv/postgres/initdb/{{item}}.j2
+    src: "{{item}}.j2"
     dest: /srv/postgres/initdb/{{item}}
     mode: 0755
   with_items:

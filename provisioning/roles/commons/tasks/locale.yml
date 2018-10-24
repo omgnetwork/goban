@@ -2,7 +2,7 @@
 - name: copy default locale
   become: yes
   copy:
-    src: etc/default/locale
+    src: locale
     dest: /etc/default/locale
     mode: 0644
   notify:
