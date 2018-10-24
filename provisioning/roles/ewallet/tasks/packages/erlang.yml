@@ -13,7 +13,8 @@
 
 - name: install erlang and elixir
   become: yes
-  apt: name={{item}} state=present
-  with_items:
-    - esl-erlang=1:20.2.2
-    - elixir=1.6.5-1
+  apt:
+    name:
+      - esl-erlang=1:20.2.2
+      - elixir=1.6.5-1
+    state: present

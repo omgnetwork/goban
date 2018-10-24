@@ -1,8 +1,13 @@
 ---
 - name: install chrony
   become: yes
-  apt: name=chrony state=latest
+  apt:
+    name: chrony
+    state: latest
 
 - name: enable chrony
   become: yes
-  service: name=chrony enabled=yes state=started
+  service:
+    name: chrony
+    enabled: yes
+    state: started

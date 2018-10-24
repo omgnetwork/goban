@@ -13,7 +13,9 @@
 
 - name: install docker
   become: yes
-  apt: name=docker-ce state=latest
+  apt:
+    name: docker-ce
+    state: latest
 
 - name: add current user to docker
   become: yes

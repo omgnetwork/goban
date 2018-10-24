@@ -1,7 +1,9 @@
 ---
 - name: install python3
   become: yes
-  apt: name=python3 state=latest
+  apt:
+    name: python3
+    state: latest
 
 - name: install pip
   become: yes
@@ -12,6 +14,7 @@
 
 - name: install python3 modules for ansible
   become: yes
-  pip: name={{item}} state=latest
-  with_items:
-    - docker-py
+  pip:
+    name:
+      - docker-py
+    state: latest

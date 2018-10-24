@@ -10,7 +10,7 @@
   args:
     chdir: /vagrant/apps/admin_panel/assets
   register: yarn_result
-  changed_when: yarn_result['stdout'].find('Already up-to-date') == -1
+  changed_when: yarn_result.stdout.find('Already up-to-date') == -1
 
 - name: perform initial setup
   shell: |
@@ -20,5 +20,3 @@
   args:
     chdir: /vagrant
     creates: /vagrant/_build
-  environment:
-    LD_LIBRARY_PATH: "/usr/local/lib:{{ansible_env['LD_LIBRARY_PATH']}}"
