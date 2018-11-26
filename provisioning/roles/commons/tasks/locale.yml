@@ -1,9 +1,0 @@
----
-- name: copy default locale
-  become: yes
-  copy:
-    src: locale
-    dest: /etc/default/locale
-    mode: 0644
-  notify:
-    - update locale

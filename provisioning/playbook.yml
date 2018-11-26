@@ -1,9 +1,0 @@
----
-- hosts: all
-  roles:
-    - commons
-
-- hosts: ewallet
-  roles:
-    - postgres
-    - ewallet

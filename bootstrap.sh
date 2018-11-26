@@ -241,16 +241,6 @@ bootstrap_darwin() {
         fi
     fi
 
-    if hash ansible-playbook 2>/dev/null; then
-        printn_ok "Ansible is already installed"
-    else
-        printn_wait "Installing Ansible..."
-        if ! brew install ansible 2>&1 |sed "s/^/    /"; then
-            printn_error "An error occured while installing Ansible."
-            exit 1
-        fi
-    fi
-
     if hash vagrant 2>/dev/null; then
         printn_ok "Vagrant is already installed."
     else

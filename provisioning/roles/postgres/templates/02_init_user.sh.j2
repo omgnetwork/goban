@@ -1,6 +1,0 @@
-#!/bin/bash
-set -e
-
-psql -v ON_ERROR_STOP=1 --username "{{postgres_user}}" <<-EOSQL
-  CREATE USER {{ewallet_postgres_user}} WITH ENCRYPTED PASSWORD '{{ewallet_postgres_user}}' CREATEDB;
-EOSQL

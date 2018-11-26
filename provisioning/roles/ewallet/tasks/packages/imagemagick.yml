@@ -1,6 +1,0 @@
----
-- name: install imagemagick
-  become: yes
-  apt:
-    name: imagemagick
-    state: present

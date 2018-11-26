@@ -1,8 +1,0 @@
----
-- import_tasks: locale.yml
-- import_tasks: package.yml
-- import_tasks: python.yml
-- import_tasks: chrony.yml
-- import_tasks: docker.yml
-- import_tasks: ssh.yml
-- import_tasks: bashrc.yml
