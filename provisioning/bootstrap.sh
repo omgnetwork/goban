@@ -17,13 +17,23 @@ apt-get install -y \
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 apt-get update
-apt-get install -y \
-        docker-ce \
-        docker-compose
+apt-get install -y docker-ce
 
 systemctl enable docker
 systemctl start docker
 usermod -aG docker vagrant
+
+
+#
+# Docker-compose
+#
+
+curl -fsSL \
+     -o /usr/local/bin/docker-compose \
+     "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)"
+
+echo "c176543737b8aea762022245f0f4d58781d3cb1b072bc14f3f8e5bb96f90f1a2  /usr/local/bin/docker-compose" | sha256sum -c -
+chmod +x /usr/local/bin/docker-compose
 
 
 #
