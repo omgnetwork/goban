@@ -15,6 +15,19 @@ if File.exists?(cfg_file)
   end
 end
 
+if not ENV["ANSIBLE_CMD"]&.empty?
+  %w(ansible-playbook-3.6 ansible-playbook-2.7 ansible-playbook).each do |cmd|
+    if ansible_cmd = which(cmd)
+      ANSIBLE_CMD = ansible_cmd
+      break
+    end
+  end
+end
+
+ANSIBLE_CMD          = ENV["ANSIBLE_CMD"]
+ANSIBLE_SKIP         = ENV["ANSIBLE_SKIP"]&.split
+ANSIBLE_TAGS         = ENV["ANSIBLE_TAGS"]&.split
+
 VAGRANT_NFS          = ENV["VAGRANT_NFS"] || cfg["VAGRANT_NFS"]
 VAGRANT_VNC_PASSWORD = ENV["VAGRANT_VNC_PASSWORD"] || cfg["VAGRANT_VNC_PASSWORD"]
 
@@ -43,9 +56,9 @@ Vagrant.configure("2") do |config|
       ansible.limit              = "all"
       ansible.config_file        = "provisioning/ansible.cfg"
       ansible.playbook           = "provisioning/playbook.yml"
-      ansible.playbook_command   = ENV["ANSIBLE_CMD"] || "ansible-playbook"
-      ansible.skip_tags          = ENV["ANSIBLE_SKIP"]&.split
-      ansible.tags               = ENV["ANSIBLE_TAGS"]&.split
+      ansible.playbook_command   = ANSIBLE_CMD
+      ansible.skip_tags          = ANSIBLE_SKIP
+      ansible.tags               = ANSIBLE_TAGS
       ansible.compatibility_mode = "2.0"
       ansible.host_vars          = {
         "ewallet" => {"private_ipv4" => "10.5.10.10"},
