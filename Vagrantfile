@@ -26,7 +26,7 @@ VAGRANT_VNC_PASSWORD = ENV["VAGRANT_VNC_PASSWORD"] || cfg["VAGRANT_VNC_PASSWORD"
 synced_folder_args = {}
 
 if (VAGRANT_NFS =~ /^(1|y|t)/) != nil
-  synced_folder_args[:type]          = "nfs"
+  synced_folder_args[:type] = "nfs"
   synced_folder_args[:mount_options] = ["actimeo=2"]
 end
 
@@ -39,7 +39,11 @@ Vagrant.configure("2") do |config|
   # as an actual folder rather than a link. We also do not want to expose
   # .vagrant/.git/etc. in Vagrant.
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder "ewallet", "/vagrant/ewallet", synced_folder_args
+  %w(ewallet e2e).each do |e|
+    if File.exists?(e)
+      config.vm.synced_folder e, "/vagrant/#{e}", synced_folder_args
+    end
+  end
 
   config.vm.provision :shell, privileged: true, path: "provisioning/bootstrap.sh"
   config.vm.provider "virtualbox" do |vb|

@@ -75,9 +75,9 @@ print_usage() {
     printf "Default projects:\\n"
     printf "\\n"
     printf "	 These projects are setup by default when no arguments are given to bootstrap.\\n"
-    printf "	 They are the minimal set of projects required to get the test mode running.\\n"
     printf "\\n"
     printf "	 \\033[1;1mewallet\\033[0;0m    The eWallet server.\\n"
+    printf "	 \\033[1;1me2e\\033[0;0m        The e2e test suite.\\n"
     printf "\\n"
 }
 
@@ -178,6 +178,7 @@ clone_repository() {
 common_clone() {
     printn_head "Cloning repositories:"
     clone_repository ewallet ssh://git@github.com/omisego/ewallet.git
+    clone_repository e2e ssh://git@github.com/omisego/ewallet.git
     printf "\\n"
 }
 
